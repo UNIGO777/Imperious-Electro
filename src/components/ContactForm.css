@@ -1,0 +1,26 @@
+/* Grid pattern for form background */
+.bg-grid-pattern {
+  background-image: 
+    linear-gradient(to right, rgba(243, 244, 246, 0.1) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(243, 244, 246, 0.1) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* Input field focus animations */
+input:focus + label, textarea:focus + label {
+  transform: translateY(-2px);
+}
+
+/* Custom animations for form elements */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.contact-icon {
+  animation: float 6s ease-in-out infinite;
+}
