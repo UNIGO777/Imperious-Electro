@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 
 const WhyChooseUs = () => {
   const reasons = [
@@ -27,16 +28,16 @@ const WhyChooseUs = () => {
           <span className="text-yellow-500 font-medium">WHY CHOOSE US</span>
         </div>
         
-        <div className="flex flex-col md:flex-row justify-between items-center mb-8">
+        <div className="flex flex-col md:flex-row justify-between md:items-center mb-8">
           <h2 className="text-3xl md:text-4xl font-bold">
             WHY WE'RE YOUR BEST CHOICE
           </h2>
-          <a href="#contact" className="mt-4 md:mt-0 bg-[#feb700] hover:bg-yellow-600 text-white py-3 px-6 rounded-md flex items-center transition-colors">
+          <Link to="/contact" className="mt-4 md:mt-0 bg-[#feb700] hover:bg-yellow-600 text-black font-bold py-3 px-6 w-fit  flex md:items-center transition-colors">
             Contact Now
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
               <path fillRule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
             </svg>
-          </a>
+          </Link>
         </div>
         
         <div className="h-px w-full bg-gray-200 mb-12"></div>
@@ -60,7 +61,7 @@ const WhyChooseUs = () => {
           </motion.div>
           
           {/* Right side - Content */}
-          <motion.div 
+          <div 
             className="md:w-1/2"
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -69,21 +70,20 @@ const WhyChooseUs = () => {
           >
             <div className="space-y-12">
               {reasons.map((reason, index) => (
-                <motion.div 
+                <div 
                   key={index}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1, duration: 0.5 }}
+                  
+                 
                   viewport={{ once: true }}
                 >
                   <div className='flex gap-3'><div className="text-xl text-yellow-500 font-bold mb-2">{reason.number}.</div>
                   <h3 className="text-xl font-bold mb-2">{reason.title}</h3></div>
                   <div className="h-px w-full bg-gray-200 my-4"></div>
                   <p className="text-gray-600">{reason.description}</p>
-                </motion.div>
+                </div>
               ))}
             </div>
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>

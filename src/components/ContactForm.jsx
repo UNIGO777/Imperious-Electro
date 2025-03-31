@@ -1,5 +1,4 @@
-import { motion, AnimatePresence } from 'framer-motion';
-import { useState, useRef, useEffect } from 'react';
+import { useState } from 'react';
 import { Phone, Mail, MapPin, Clock, Send, CheckCircle } from 'lucide-react';
 import './ContactForm.css';
 
@@ -17,6 +16,9 @@ const ContactForm = () => {
     phone: false,
     message: false
   });
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState(null); // 'success', 'error', or null
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -40,12 +42,47 @@ const ContactForm = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // In a real app, you would handle form submission here
-    console.log('Form submitted:', formState);
-    alert('Thanks for your message! This is a demo, so no message was actually sent.');
-    setFormState({ name: '', email: '', phone: '', message: '' });
+    setIsSubmitting(true);
+    setSubmitStatus(null);
+    
+    const formData = new FormData();
+    formData.append('access_key', '940e7523-e120-4451-86de-35a0c08f6f3e');
+    Object.entries(formState).forEach(([key, value]) => {
+      formData.append(key, value);
+    });
+    
+    try {
+      const response = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'Accept': 'application/json'
+        }
+      });
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        setSubmitStatus('success');
+        setFormState({ name: '', email: '', phone: '', message: '' });
+        setFocused({
+          name: false,
+          email: false,
+          phone: false,
+          message: false
+        });
+      } else {
+        setSubmitStatus('error');
+        console.error('Form submission error:', data);
+      }
+    } catch (error) {
+      setSubmitStatus('error');
+      console.error('Form submission error:', error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -53,36 +90,27 @@ const ContactForm = () => {
       <div className="container mx-auto px-4">
         <div className="flex flex-col md:flex-row gap-12">
           {/* Left side - Content */}
-          <motion.div 
-            className="md:w-1/2"
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-          >
+          <div className="md:w-1/2">
             <h2 className="text-3xl md:text-4xl font-bold mb-6 text-gray-800">
               CONTACT OUR ENGINEERING SERVICE PROJECTS
             </h2>
             <div className="w-20 h-1 bg-[#feb700] mb-8"></div>
             
             <div className="grid grid-cols-2 gap-6 mb-8">
-              <motion.div 
-                className="bg-white p-6 rounded-lg shadow-md border-l-4 border-[#feb700] hover:shadow-lg transition-all duration-300 group relative overflow-hidden"
-                whileHover={{ y: -5, boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)" }}
-              >
+              <div className="bg-white p-6 rounded-lg shadow-md border-l-4 border-[#feb700] hover:shadow-lg transition-all duration-300 group relative overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-r from-yellow-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 <div className="flex items-center justify-center w-12 h-12 rounded-full bg-yellow-50 mb-4 group-hover:bg-[#feb700] transition-colors duration-300 contact-icon">
                   <Phone className="w-6 h-6 text-[#feb700] group-hover:text-white transition-colors duration-300" />
                 </div>
                 <h3 className="text-xl font-bold mb-2 text-gray-800">Phone</h3>
-                <p className="text-gray-600">+1 (555) 123-4567</p>
-              </motion.div>
+                <p className="text-gray-600">+91 88150 11111</p>
+              </div>
               <div className="bg-white p-6 rounded-lg shadow-md border-l-4 border-[#feb700] hover:shadow-lg transition-shadow duration-300 group">
                 <div className="flex items-center justify-center w-12 h-12 rounded-full bg-yellow-50 mb-4 group-hover:bg-[#feb700] transition-colors duration-300 contact-icon">
                   <Mail className="w-6 h-6 text-[#feb700] group-hover:text-white transition-colors duration-300" />
                 </div>
                 <h3 className="text-xl font-bold mb-2 text-gray-800">Email</h3>
-                <p className="text-gray-600">info@multiup.com</p>
+                <p className="text-gray-600 break-words">imperiouselectro@gmail.com</p>
               </div>
               <div className="bg-white p-6 rounded-lg shadow-md border-l-4 border-[#feb700] hover:shadow-lg transition-shadow duration-300 group">
                 <div className="flex items-center justify-center w-12 h-12 rounded-full bg-yellow-50 mb-4 group-hover:bg-[#feb700] transition-colors duration-300 contact-icon">
@@ -99,19 +127,18 @@ const ContactForm = () => {
                 <p className="text-gray-600">Mon-Fri: 8am - 6pm</p>
               </div>
             </div>
-          </motion.div>
+          </div>
           
           {/* Right side - Form */}
-          <motion.div 
-            className="md:w-1/2"
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-          >
-            <div className="bg-white p-10 rounded-xl  border border-gray-100  transition-all duration-500">
+          <div className="md:w-1/2">
+            <div className="bg-white p-10 rounded-xl border border-gray-100">
               <h3 className="text-2xl font-bold mb-6 text-gray-800 text-center">Get In Touch</h3>
               <form onSubmit={handleSubmit}>
+                <input 
+                  type="hidden" 
+                  name="access_key" 
+                  value="940e7523-e120-4451-86de-35a0c08f6f3e"
+                />
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                   <div className="relative">
                     <input
@@ -192,18 +219,43 @@ const ContactForm = () => {
                   </label>
                 </div>
                 
-                <motion.button
+                <button
                   type="submit"
-                  whileHover={{ scale: 1.03, boxShadow: "0 10px 15px -3px rgba(254, 183, 0, 0.3)" }}
-                  whileTap={{ scale: 0.98 }}
-                  className="w-full bg-[#feb700] hover:bg-yellow-600 text-white font-bold py-4 px-6 rounded-lg transition duration-300 shadow-md flex items-center justify-center gap-2"
+                  disabled={isSubmitting}
+                  className={`w-full bg-[#feb700] ${isSubmitting ? 'opacity-70' : 'hover:bg-yellow-600'} text-white font-bold py-4 px-6 rounded-lg transition duration-300 shadow-md flex items-center justify-center gap-2`}
                 >
-                  <span>SEND MESSAGE</span>
-                  <Send className="w-5 h-5" />
-                </motion.button>
+                  {isSubmitting ? (
+                    <>
+                      <span>SENDING...</span>
+                      <div className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"></div>
+                    </>
+                  ) : (
+                    <>
+                      <span>SEND MESSAGE</span>
+                      <Send className="w-5 h-5" />
+                    </>
+                  )}
+                </button>
+                
+                {/* Success message */}
+                {submitStatus === 'success' && (
+                  <div className="mt-4 p-3 bg-green-50 border border-green-200 text-green-700 rounded-lg flex items-center gap-2">
+                    <CheckCircle className="w-5 h-5 text-green-500" />
+                    <span>Thank you! Your message has been sent successfully.</span>
+                  </div>
+                )}
+                
+                {submitStatus === 'error' && (
+                  <div className="mt-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                    </svg>
+                    <span>Oops! Something went wrong. Please try again later.</span>
+                  </div>
+                )}
               </form>
             </div>
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>

@@ -1,5 +1,6 @@
 import { motion, useMotionValue, useTransform, animate } from 'framer-motion';
 import { useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
 
 const Hero = () => {
   const projectCount = useMotionValue(0);
@@ -67,21 +68,21 @@ const Hero = () => {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-              <motion.button 
+              <Link to="/contact" ><motion.button 
                 whileHover={{ scale: 1.05 }} 
                 whileTap={{ scale: 0.95 }}
-                className="bg-[#feb700] text-xs sm:text-sm hover:bg-yellow-600 text-gray-900 font-bold py-2 sm:py-3 px-4 sm:px-6  transition duration-300 w-full sm:w-auto"
+                className="bg-[#feb700] text-xs sm:text-sm hover:bg-yellow-600 text-gray-900 font-bold py-2 sm:py-[14px] px-4 sm:px-6  transition duration-300 w-full sm:w-auto"
               >
                 GET STARTED
-              </motion.button>
+              </motion.button></Link>
               
-              <motion.button 
+              <Link to="/about"><motion.button 
                 whileHover={{ scale: 1.05 }} 
                 whileTap={{ scale: 0.95 }}
                 className="bg-transparent text-xs sm:text-sm border-2 border-white hover:bg-white/10 text-white font-bold py-2 sm:py-3 px-4 sm:px-6 transition duration-300 w-full sm:w-auto"
               >
                 LEARN MORE
-              </motion.button>
+              </motion.button></Link>
             </div>
           </motion.div>
           

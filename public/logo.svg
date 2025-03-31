@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <!-- Dark background circle -->
+  <circle cx="100" cy="100" r="95" fill="#242424" />
+  
+  <!-- Outer ring -->
+  <circle cx="100" cy="100" r="95" fill="none" stroke="#feb700" stroke-width="5" />
+  
+  <!-- Letter I -->
+  <path d="M70 60 L70 140" stroke="#feb700" stroke-width="12" stroke-linecap="round" />
+  
+  <!-- Letter E with lightning effect -->
+  <path d="M90 60 L140 60" stroke="#feb700" stroke-width="12" stroke-linecap="round" />
+  <path d="M90 100 L130 100" stroke="#feb700" stroke-width="12" stroke-linecap="round" />
+  <path d="M90 140 L140 140" stroke="#feb700" stroke-width="12" stroke-linecap="round" />
+  <path d="M90 60 L90 140" stroke="#feb700" stroke-width="12" stroke-linecap="round" />
+  
+  <!-- Lightning bolt accent -->
+  <path d="M150 70 L130 100 L145 105 L125 135" stroke="#feb700" stroke-width="6" stroke-linecap="round" fill="none" />
+  
+  <!-- Circuit pattern accent -->
+  <circle cx="160" cy="60" r="5" fill="#feb700" />
+  <circle cx="160" cy="140" r="5" fill="#feb700" />
+  <path d="M160 60 L160 140" stroke="#feb700" stroke-width="2" stroke-dasharray="5,5" />
+</svg>

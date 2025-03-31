@@ -6,7 +6,7 @@ import TextSlider from '../components/TextSlider';
 import AboutUs from '../components/AboutUs';
 import Services from '../components/Services';
 import WhyChooseUs from '../components/WhyChooseUs';
-import Projects from '../components/Projects';
+
 import DidYouKnow365 from '../components/DidYouKnow365';
 import TestimonialsSlider from '../components/TestimonialsSlider';
 import WhatWeDo from '../components/WhatWeDo';

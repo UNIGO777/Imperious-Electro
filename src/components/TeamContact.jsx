@@ -1,14 +1,75 @@
-import { motion } from 'framer-motion';
-import { Phone, Mail, MapPin, Clock, Users, Award, Calendar } from 'lucide-react';
+import { useLocation } from 'react-router-dom';
+import { useState } from 'react';
+import { Phone, Mail, MapPin, Clock, Users, Award, Calendar, Send, CheckCircle } from 'lucide-react';
 
 const TeamContact = () => {
+  const location = useLocation();
+  const isContactPage = location.pathname === '/contact';
+  
+  // Form state management
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    message: ''
+  });
+  
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState(null); // 'success', 'error', or null
+  
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+  
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitStatus(null);
+    
+    const form = new FormData();
+    Object.entries(formData).forEach(([key, value]) => {
+      form.append(key, value);
+    });
+    
+    // Add the access key
+    form.append('access_key', '940e7523-e120-4451-86de-35a0c08f6f3e');
+    
+    try {
+      const response = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        body: form,
+        headers: {
+          'Accept': 'application/json'
+        }
+      });
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        setSubmitStatus('success');
+        setFormData({ name: '', email: '', message: '' });
+      } else {
+        setSubmitStatus('error');
+        console.error('Form submission error:', data);
+      }
+    } catch (error) {
+      setSubmitStatus('error');
+      console.error('Form submission error:', error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   const teamMembers = [
     {
       name: 'John Smith',
       position: 'CEO & Founder',
       image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80',
       email: 'john@imperiouselectro.com',
-      phone: '+1 (555) 123-4567'
+      phone: '+91 88150 11111'
     },
     {
       name: 'Sarah Johnson',
@@ -36,17 +97,17 @@ const TeamContact = () => {
   const companyInfo = [
     {
       title: 'Phone',
-      content: '+1 (555) 123-4567',
+      content: '+91 88150 11111',
       icon: <Phone className="w-6 h-6 text-[#feb700] group-hover:text-white transition-colors duration-300" />
     },
     {
       title: 'Email',
-      content: 'info@imperiouselectro.com',
+      content: 'imperiouselectro@gmail.com',
       icon: <Mail className="w-6 h-6 text-[#feb700] group-hover:text-white transition-colors duration-300" />
     },
     {
       title: 'Address',
-      content: '123 Construction Ave, New York, NY',
+      content: '60 rajharsh colony kolar road bhopal.',
       icon: <MapPin className="w-6 h-6 text-[#feb700] group-hover:text-white transition-colors duration-300" />
     },
     {
@@ -66,21 +127,18 @@ const TeamContact = () => {
     }
   ];
 
+  const ContentWrapper = isContactPage ? 'div' : 'motion.div';
+  const ButtonWrapper = isContactPage ? 'button' : 'motion.button';
+
   return (
     <section className="py-16 bg-white">
       <div className="container mx-auto px-4">
         {/* Section Header */}
        
-
         {/* Team Members */}
         
-
         {/* Company History & Mission */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          viewport={{ once: true }}
+        <div
           className="mb-16"
         >
           <div className="flex items-center mb-4">
@@ -112,65 +170,99 @@ const TeamContact = () => {
               </p>
             </div>
           </div>
-        </motion.div>
+        </div>
 
         {/* Contact Information */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
           {/* Left side - Contact Form */}
-          <motion.div 
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="bg-gray-50 p-8 rounded-lg"
-          >
+          <div className="bg-gray-50 p-8 rounded-lg">
             <h3 className="text-2xl font-bold mb-6">Get In Touch</h3>
-            <form className="space-y-6">
+            {/* Form with W3Forms integration */}
+            <form className="space-y-6" onSubmit={handleSubmit}>
+              <input 
+                type="hidden" 
+                name="access_key" 
+                value="940e7523-e120-4451-86de-35a0c08f6f3e"
+              />
               <div>
                 <label htmlFor="name" className="block text-gray-700 mb-2">Your Name</label>
                 <input 
                   type="text" 
-                  id="name" 
-                  className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all"
+                  id="name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all bg-gray-50 hover:bg-white focus:bg-white"
                   placeholder="John Doe"
+                  required
                 />
               </div>
               <div>
                 <label htmlFor="email" className="block text-gray-700 mb-2">Your Email</label>
                 <input 
                   type="email" 
-                  id="email" 
-                  className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all"
+                  id="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all bg-gray-50 hover:bg-white focus:bg-white"
                   placeholder="john@example.com"
+                  required
                 />
               </div>
               <div>
                 <label htmlFor="message" className="block text-gray-700 mb-2">Your Message</label>
                 <textarea 
-                  id="message" 
+                  id="message"
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
                   rows="4" 
-                  className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all bg-gray-50 hover:bg-white focus:bg-white"
                   placeholder="How can we help you?"
+                  required
                 ></textarea>
               </div>
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="bg-[#feb700] hover:bg-yellow-600 text-white font-bold py-3 px-6 rounded-md transition duration-300 w-full"
+              <button
+                className={`bg-[#feb700] ${isSubmitting ? 'opacity-70' : 'hover:bg-yellow-600'} text-white font-bold py-3 px-6 rounded-md transition duration-300 w-full flex items-center justify-center gap-2`}
                 type="submit"
+                disabled={isSubmitting}
               >
-                Send Message
-              </motion.button>
+                {isSubmitting ? (
+                  <>
+                    <span>Sending...</span>
+                    <div className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"></div>
+                  </>
+                ) : (
+                  <>
+                    <span>Send Message</span>
+                    <Send className="w-5 h-5" />
+                  </>
+                )}
+              </button>
+              
+              {/* Success message */}
+              {submitStatus === 'success' && (
+                <div className="mt-4 p-3 bg-green-50 border border-green-200 text-green-700 rounded-lg flex items-center gap-2">
+                  <CheckCircle className="w-5 h-5 text-green-500" />
+                  <span>Thank you! Your message has been sent successfully.</span>
+                </div>
+              )}
+              
+              {/* Error message */}
+              {submitStatus === 'error' && (
+                <div className="mt-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg flex items-center gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                  </svg>
+                  <span>Oops! Something went wrong. Please try again later.</span>
+                </div>
+              )}
             </form>
-          </motion.div>
+          </div>
           
           {/* Right side - Contact Info */}
-          <motion.div 
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-          >
+          <div>
             <h3 className="text-2xl font-bold mb-6">Contact Information</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
               {companyInfo.map((info, index) => (
@@ -188,36 +280,9 @@ const TeamContact = () => {
               ))}
             </div>
             
-            <div className="mt-8">
-              <h3 className="text-2xl font-bold mb-6">Follow Us</h3>
-              <div className="flex space-x-4">
-                <a href="#" className="bg-[#feb700] hover:bg-yellow-600 text-white p-3 rounded-full transition-colors duration-300">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
-                  </svg>
-                </a>
-                <a href="#" className="bg-[#feb700] hover:bg-yellow-600 text-white p-3 rounded-full transition-colors duration-300">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
-                  </svg>
-                </a>
-                <a href="#" className="bg-[#feb700] hover:bg-yellow-600 text-white p-3 rounded-full transition-colors duration-300">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-                    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-                  </svg>
-                </a>
-                <a href="#" className="bg-[#feb700] hover:bg-yellow-600 text-white p-3 rounded-full transition-colors duration-300">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
-                    <rect x="2" y="9" width="4" height="12"></rect>
-                    <circle cx="4" cy="4" r="2"></circle>
-                  </svg>
-                </a>
-              </div>
-            </div>
-          </motion.div>
+            
+            
+          </div>
         </div>
       </div>
     </section>

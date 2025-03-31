@@ -120,12 +120,7 @@ const NeedHelp = () => {
             </motion.div>
             
             {/* Curved arrow decoration */}
-            <div className="absolute bottom-10 left-1/3 transform -translate-x-1/2 hidden md:block">
-              <svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M80 50C80 33.4315 66.5685 20 50 20C33.4315 20 20 33.4315 20 50C20 66.5685 33.4315 80 50 80" stroke="white" strokeWidth="2" strokeDasharray="4 4"/>
-                <path d="M50 80L45 75M50 80L55 75" stroke="white" strokeWidth="2"/>
-              </svg>
-            </div>
+           
           </div>
           
           {/* Right content - Image */}

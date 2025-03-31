@@ -2,6 +2,8 @@ import { motion } from 'framer-motion';
 import { useState } from 'react';
 import ContactForm from '../components/ContactForm';
 import Footer from '../components/Footer';
+import TeamContact from '../components/TeamContact';
+
 
 
 const Contact = () => {
@@ -29,8 +31,8 @@ const Contact = () => {
 
   return (
     <>
-    <div className="min-h-screen mx-auto pt-20  h-screen flex flex-col items-center justify-center">
-      <ContactForm />
+    <div className=" mx-auto pt-20  min-h-screen flex flex-col items-center justify-center">
+    <TeamContact />
     </div>
       <Footer/></>
   );

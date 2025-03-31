@@ -8,6 +8,11 @@ const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
   
+  // Reset mobile menu when location changes
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [location]);
+  
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 50) {
@@ -21,27 +26,24 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
   
-  // Only make navbar transparent on home page
   const isHomePage = location.pathname === '/';
   const shouldBeTransparent = isHomePage && !scrolled;
   
-  // Close mobile menu when scrolling
   useEffect(() => {
     if (scrolled && isMobileMenuOpen) {
       setIsMobileMenuOpen(false);
     }
   }, [scrolled, isMobileMenuOpen]);
   
-  // Prevent body scroll when mobile menu is open
   useEffect(() => {
     if (isMobileMenuOpen) {
       document.body.style.overflow = 'hidden';
     } else {
-      document.body.style.overflow = 'auto';
+      document.body.style.overflow = 'unset';
     }
     
     return () => {
-      document.body.style.overflow = 'auto';
+      document.body.style.overflow = 'unset';
     };
   }, [isMobileMenuOpen]);
   
@@ -50,8 +52,8 @@ const Navbar = () => {
   };
   
   return (
-    <nav className={`fixed w-full z-50 px-4 transition-all duration-300 ${shouldBeTransparent ? 'bg-transparent py-4' : 'bg-white py-4'}`}>
-      <div className="container mx-auto py">
+    <nav className={`fixed w-full z-[100] px-4 transition-all duration-300 ${shouldBeTransparent ? 'bg-transparent py-4' : 'bg-white py-4'}`}>
+      <div className="container mx-auto">
         <div className="flex justify-between items-center">
           <motion.div
             initial={{ opacity: 0 }}
@@ -59,11 +61,10 @@ const Navbar = () => {
             transition={{ duration: 0.5 }}
           >
             <Link to="/" className={`text-2xl font-bold ${shouldBeTransparent ? 'text-white' : 'text-gray-900'} flex items-center`}>
-            Imperious <span className="text-yellow-500 mr-1 ml-2"> Electro</span> 
+              Imperious <span className="text-yellow-500 mr-1 ml-2">Electro</span> 
             </Link>
           </motion.div>
           
-          {/* Desktop Navigation */}
           <motion.ul 
             className="hidden md:flex space-x-8"
             initial={{ opacity: 0 }}
@@ -86,9 +87,8 @@ const Navbar = () => {
             ))}
           </motion.ul>
           
-          {/* Mobile Menu Button */}
-          <button 
-            className="md:hidden z-50 relative"
+          <div 
+            className="md:hidden z-[110] relative p-2 border-none outline-none"
             onClick={toggleMobileMenu}
             aria-label="Toggle mobile menu"
           >
@@ -102,58 +102,53 @@ const Navbar = () => {
                 <Menu size={24} className={shouldBeTransparent ? "text-white" : "text-gray-900"} />
               )}
             </motion.div>
-          </button>
+          </div>
           
-        
-            <Link 
-              to="/contact"
-              id='GETAQUOTELINK' 
-              className="bg-[#feb700] hover:bg-yellow-600 text-black font-bold py-3 px-6 transition-all duration-300 hidden md:inline-flex items-center gap-2 shadow-lg hover:shadow-xl transform hover:scale-[0.98]"
+          <Link 
+            to="/contact"
+            id='GETAQUOTELINK' 
+            className="bg-[#feb700] hover:bg-yellow-600 text-black font-bold py-3 px-6 transition-all duration-300 hidden md:inline-flex items-center gap-2 shadow-lg hover:shadow-xl transform hover:scale-[0.98]"
+          >
+            <motion.div 
+              className="flex items-center gap-3"
+              whileHover={{ x: 5 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ duration: 0.2 }}
             >
-              <motion.div 
-                className="flex items-center gap-3"
-                whileHover={{ x: 5 }}
-                whileTap={{ scale: 0.95 }}
-                transition={{ duration: 0.2 }}
-              >
-                <span className='text text-lg'>GET A QUOTE</span>
-                <ArrowUpRight size={20} className='arrow font-bold' />
-              </motion.div>
-            </Link>
+              <span className='text text-lg'>GET A QUOTE</span>
+              <ArrowUpRight size={20} className='arrow font-bold' />
+            </motion.div>
+          </Link>
 
-            <style>
-              {`
-                #GETAQUOTELINK .arrow {
-                  rotate: 0deg;
-                  transition: rotate 0.3s ease-in-out;
-                  font-weight: bold;
-                }
-                
-                #GETAQUOTELINK:hover .arrow {
-                  rotate: 45deg;
-                  color: white;
-                }
-                #GETAQUOTELINK:hover .text {
-                  color: white;
-                }
-                
-                /* Mobile menu animation */
-                .sidebar-overlay {
-                  backdrop-filter: blur(4px);
-                }
-              `}
-            </style>
-        
+          <style>
+            {`
+              #GETAQUOTELINK .arrow {
+                rotate: 0deg;
+                transition: rotate 0.3s ease-in-out;
+                font-weight: bold;
+              }
+              
+              #GETAQUOTELINK:hover .arrow {
+                rotate: 45deg;
+                color: white;
+              }
+              #GETAQUOTELINK:hover .text {
+                color: white;
+              }
+              
+              .sidebar-overlay {
+                backdrop-filter: blur(4px);
+              }
+            `}
+          </style>
         </div>
       </div>
       
-      {/* Mobile Sidebar Menu */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <>
-            {/* Overlay */}
             <motion.div 
-              className="fixed inset-0 bg-black/50 sidebar-overlay z-40"
+              className="fixed inset-0 bg-black/50 sidebar-overlay z-[105]"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -161,12 +156,11 @@ const Navbar = () => {
               onClick={toggleMobileMenu}
             />
             
-            {/* Sidebar */}
             <motion.div 
-              className="fixed top-0 right-0 h-full w-3/4 max-w-xs bg-white z-40 shadow-xl flex flex-col"
-              initial={{ x: '100%', opacity: 0.5 }}
-              animate={{ x: 0, opacity: 1 }}
-              exit={{ x: '100%', opacity: 0 }}
+              className="fixed top-0 right-0 h-full w-3/4 max-w-xs bg-white z-[105] shadow-xl flex flex-col"
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 300 }}
             >
               <div className="flex flex-col h-full p-6">
